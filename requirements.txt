@@ -1,0 +1,14 @@
+django
+channels
+pytest-django
+pytest-cov
+factory-boy
+django-crispy-forms
+django-filter
+djangorestframework
+django-extensions
+django-debug-toolbar
+django-tables2
+django-decouple
+Pillow
+mysqlclient

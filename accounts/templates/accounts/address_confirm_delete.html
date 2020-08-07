@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Delete Address - {{ block.super }}
+{% endblock title %}
+
+{% block content %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <p>
+            Do you really want to delete?
+        </p>
+
+        <div class="card">
+            <div class="card-body">
+                {{ address.user.name }}<br>
+                {{ address.zip_code }}<br>
+                {{ address.city }}<br>
+                {{ address.country }}<br>
+            </div>
+        </div>
+
+        <div class="pt-4">
+            <button class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'accounts:address-list' %}" class="btn btn-secondary">No</a>
+        </div>
+    </form>
+
+{% endblock content %}
