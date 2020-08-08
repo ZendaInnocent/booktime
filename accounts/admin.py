@@ -2,12 +2,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 
-from accounts.models import CustomUser, Address
+from accounts.models import User
 from accounts.forms import UserChangeForm, UserCreationForm
 
 
-@admin.register(CustomUser)
-class CustomUserAdmin(BaseUserAdmin):
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
     # The form to change user instances
     form = UserChangeForm
 
@@ -30,22 +30,19 @@ class CustomUserAdmin(BaseUserAdmin):
     ordering = ('email', )
     filter_horizontal = ()
     search_fields = ('email', 'name', )
-    list_filter = ('is_superuser', )
+    list_filter = ('is_staff', )
     list_display = ('email',
                     'name',
                     'is_staff', )
 
 
-# admin.site.register(CustomUser, CustomUserAdmin)
+# class AddressAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'name', 'zip_code', 'city', 'country', )
+
+#     def name(self, obj):
+#         return obj.user.name
 
 
-class AddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'zip_code', 'city', 'country', )
-
-    def name(self, obj):
-        return obj.user.name
-
-
-admin.site.register(Address, AddressAdmin)
+# admin.site.register(Address, AddressAdmin)
 
 admin.site.unregister(Group)

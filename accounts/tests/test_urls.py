@@ -8,4 +8,5 @@ class TestAccountsAppUrls(TestCase):
 
     def test_register_url_resolves(self):
         register_url = reverse('accounts:signup')
-        self.assertEqual(resolve(register_url).func.view_class, views.UserRegistrationView)
+        self.assertEqual(
+            resolve(register_url).func.view_class, views.UserRegistrationView)
