@@ -46,3 +46,13 @@ class ProductListView(generic.ListView):
 class ProductDetailView(generic.DetailView):
     model = Product
     template_name = 'main/product_detail.html'
+
+
+class TagDetailView(generic.ListView):
+    template_name = 'main/tag_detail.html'
+    paginate_by = 2
+
+    def get_queryset(self):
+        tag = self.kwargs['tag']
+        products = Product.objects.active().filter(tags__slug=tag)
+        return products.order_by('name')

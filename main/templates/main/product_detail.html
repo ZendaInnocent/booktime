@@ -34,7 +34,13 @@
             </tr>
             <tr>
                 <th scope="row">Tags</th>
-                <td>{{ object.tags.all | join:", " | default:"No tags available" }}</td>
+                <td>
+                    {% for tag in object.tags.all %}
+                        <a href="{% url 'main:tag-detail' tag.slug %}" class="btn btn-secondary">{{ tag }}</a>
+                    {% empty %}
+                        No tags available
+                    {% endfor %}
+                </td>
             </tr>
             <tr>
                 <th scope="row">In Stock</th>
