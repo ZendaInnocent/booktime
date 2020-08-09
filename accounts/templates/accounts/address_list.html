@@ -5,28 +5,30 @@
 {% endblock title %}
 
 {% block content %}
-    {% if object_list %}
-        <h2>List of your addresses:</h2>
+    <h2>List of your addresses:</h2>
+    <a href="{% url 'accounts:address-create' %}" class="btn btn-primary">Add Address</a>
 
-        {% for address in object_list %}
-            <div class="lead pt-4">
-                <div class="card">
-                    <div class="card-body">
-                        {{ address.user.name }}<br>
-                        {{ address.zip_code }}<br>
-                        {{ address.city }}<br>
-                        {{ address.country }}<br>
-                    </div>
-                    <div class="card-body">
-                        <a href="{% url 'accounts:address-update' address.pk %}" class="btn btn-secondary">Update Address</a>
-                        <a href="{% url 'accounts:address-delete' address.pk %}" class="btn btn-danger">Delete Address</a>
-                        <a href="{% url 'accounts:address-create' %}" class="btn btn-primary">Add Address</a>
-                    </div>
+    <div class="row">
+    {% for address in object_list %}
+        <div class="lead pt-4 col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    {{ address.name }}<br>
+                    {{ address.address1 }}<br>
+                    {{ address.address2 | default:'-' }}<br>
+                    {{ address.zip_code }}<br>
+                    {{ address.city }}<br>
+                    {{ address.get_country_display }}<br>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'accounts:address-update' address.pk %}" class="btn btn-secondary">Update Address</a>
+                    <a href="{% url 'accounts:address-delete' address.pk %}" class="btn btn-danger">Delete Address</a>
                 </div>
             </div>
-        {% endfor %}
-    {% else %}
-        <h2>You have no addresses yet.</h2>
-    {% endif %}
+        </div>
+    {% empty %}
+        <p class="lead">You have no addresses yet.</p>
+    {% endfor %}
+    </div>
 
 {% endblock content %}

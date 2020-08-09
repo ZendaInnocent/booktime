@@ -59,25 +59,28 @@ class User(AbstractBaseUser):
         return True
 
 
-# ADDRESS_CHOICES = (
-#     ('B', 'Billing'),
-#     ('S', 'Shipping'),
-# )
+class Address(models.Model):
+    SUPPORTED_COUNTRIES = (
+        ('TZ', 'Tanzania'),
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=60)
+    address1 = models.CharField('Address Line 1', max_length=60)
+    address2 = models.CharField('Address Line 2', max_length=60, blank=True)
+    zip_code = models.CharField('ZIP / Postal Code', max_length=12)
+    city = models.CharField(max_length=60)
+    country = models.CharField(
+        max_length=3, choices=SUPPORTED_COUNTRIES, default='TZ')
 
+    class Meta:
+        verbose_name_plural = "Addresses"
 
-# class Address(models.Model):
-#     SUPPORTED_COUNTRIES = (
-#         ('TZ', 'Tanzania'),
-#     )
-#     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-#     zip_code = models.CharField('ZIP / Postal Code', max_length=12)
-#     city = models.CharField(max_length=60)
-#     country = models.CharField(
-#         max_length=3, choices=SUPPORTED_COUNTRIES, default='TZ')
-#     address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
-
-#     class Meta:
-#         verbose_name_plural = "Addresses"
-
-#     def __str__(self):
-#         return self.user.name
+    def __str__(self):
+        return ', '.join([
+            self.name,
+            self.address1,
+            self.address2,
+            self.zip_code,
+            self.city,
+            self.country,
+        ])
