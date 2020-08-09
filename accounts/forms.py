@@ -1,7 +1,12 @@
+import logging
+
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.core.mail import send_mail
 
 from accounts.models import User
+
+logger = logging.getLogger(__name__)
 
 
 class UserChangeForm(forms.ModelForm):
@@ -43,6 +48,20 @@ class UserCreationForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Passwords don't match")
         return password2
+
+    def send_email(self):
+        email = self.cleaned_data["email"]
+        name = self.cleaned_data["name"]
+        logger.info(f"Sending signup email for email={email}")
+
+        message = f'Hello {name}'
+        send_mail(
+            'Welcome to BookTime',
+            message,
+            'noreply@booktime.com',
+            [email, ],
+            fail_silently=True,
+        )
 
     def save(self, commit=True):
         # Save the provided password in hashed format

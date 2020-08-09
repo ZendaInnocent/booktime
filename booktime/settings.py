@@ -179,7 +179,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'booktime': {
+        'accounts': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,

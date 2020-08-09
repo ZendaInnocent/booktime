@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 class AccountsAppViewsTest(TestCase):
 
-    def test_user_registration_view(self):
+    def test_user_registration_view_works(self):
         response = self.client.get(reverse('accounts:signup'))
 
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'registration/signup.html')
         self.assertIsInstance(response.context['form'], UserCreationForm)
 
-    def test_user_can_register(self):
+    def test_user_registration_view_submission_works(self):
         data = {
             'email': 'someone@domain.com',
             'name': 'Someone There',
@@ -27,14 +27,12 @@ class AccountsAppViewsTest(TestCase):
         }
 
         response = self.client.post(
-            reverse('accounts:signup'), **data)
+            reverse('accounts:signup'), data)
 
-        self.assertEqual(response.status_code, 200)
-
-
-
-
-
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/')
+        self.assertTrue(User.objects.filter(
+            email='someone@domain.com').exists())
 
     # def test_address_list_page_returns_only_owned(self):
     #     user1 = User.objects.create_user(
