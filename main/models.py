@@ -1,5 +1,9 @@
 from django.db import models
 from django.urls import reverse
+from django.core.validators import MinValueValidator
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class ProductManager(models.Manager):
@@ -55,3 +59,29 @@ class ProductTag(models.Model):
 
     def natural_key(self):
         return (self.slug, )
+
+
+class Basket(models.Model):
+    OPEN = 10
+    SUBMITTED = 20
+    STATUSES = (
+        (OPEN, 'Open'),
+        (SUBMITTED, 'Submitted'),
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True)
+    status = models.IntegerField(choices=STATUSES, default=OPEN)
+
+    def is_empty(self):
+        return self.basketlines.count() == 0
+
+    def count(self):
+        return sum([i.quantity for i in self.basketlines.all()])
+
+
+class BasketLine(models.Model):
+    basket = models.ForeignKey(
+        Basket, on_delete=models.CASCADE, related_name='basketlines')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(
+        default=1, validators=[MinValueValidator(1), ])

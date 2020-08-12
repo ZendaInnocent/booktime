@@ -1,9 +1,32 @@
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render
 from django.views import generic
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 from . import forms
-from main.models import Product, ProductTag
+from main.models import Product, ProductTag, Basket, BasketLine
+
+
+def add_to_basket(request):
+    product = get_object_or_404(Product, pk=request.GET.get('product_id'))
+    basket = request.basket
+
+    if not request.basket:
+        user = request.user if request.user.is_authenticated else None
+        basket = Basket.objects.create(user=user)
+        request.session['basket_id'] = basket.id
+
+    basketline, created = BasketLine.objects.get_or_create(
+        basket=basket, product=product)
+
+    if not created:
+        basketline.quantity += 1
+        basketline.save()
+
+    return HttpResponseRedirect(
+        reverse('main:product-detail', args=(product.slug, )))
 
 
 class HomeView(generic.TemplateView):

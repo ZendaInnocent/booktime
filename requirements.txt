@@ -11,4 +11,6 @@ django-debug-toolbar
 django-tables2
 django-decouple
 Pillow
-mysqlclient
+werkzeug
+ipython
+pydotplus

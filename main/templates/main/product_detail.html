@@ -55,6 +55,6 @@
     <hr>
     <div class="d-flex">
         <a href="{% url 'main:product-list' tag='all' %}" class="btn btn-primary mt-3">View More Products</a>
-        <a href="{# url 'main:add-to-basket' #}?product_id={{ object.id }}" class="btn btn-success mt-3 ml-5">Add to Basket</a>
+        <a href="{% url 'main:add-to-basket' %}?product_id={{ object.id }}" class="btn btn-success mt-3 ml-5">Add to Basket</a>
     </div>
 {% endblock content %}

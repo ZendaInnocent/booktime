@@ -2,12 +2,47 @@ from decimal import Decimal
 
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 
 from main import forms
-from main.models import Product
+from main.models import Product, Basket, BasketLine
+
+User = get_user_model()
 
 
 class TestMainAppViews(TestCase):
+
+    def test_add_to_basket_loggedin_works(self):
+        user1 = User.objects.create_user(
+            name='sample name',
+            email='sample@mail.com',
+            password='adfsaidf',
+        )
+
+        cb = Product.objects.create(
+            name="The cathedral and the bazaar",
+            slug="cathedral-bazaar",
+            price=Decimal("10.00"),
+        )
+        w = Product.objects.create(
+            name="Microsoft Windows guide",
+            slug="microsoft-windows-guide",
+            price=Decimal("12.00"),
+        )
+
+        self.client.force_login(user1)
+        response = self.client.get(
+            reverse("main:add-to-basket"), {"product_id": cb.id})
+
+        self.assertTrue(Basket.objects.filter(user=user1).exists())
+        self.assertEqual(
+            BasketLine.objects.filter(basket__user=user1).count(), 1)
+
+        response = self.client.get(
+            reverse("main:add-to-basket"), {"product_id": w.id})
+
+        self.assertEqual(
+            BasketLine.objects.filter(basket__user=user1).count(), 2)
 
     def test_home_page_works(self):
         response = self.client.get(reverse('main:home'))

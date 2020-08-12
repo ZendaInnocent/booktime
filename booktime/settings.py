@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'crispy_forms',
+    'django_extensions',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'main.middleware.BasketMiddleware',
 
     # 'django_xss_fuzzer.ViewFuzzerMiddleware',
 ]

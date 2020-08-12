@@ -16,4 +16,6 @@ urlpatterns = [
          name='product-detail'),
     path('tag/<slug:tag>/', views.TagDetailView.as_view(),
          name='tag-detail'),
+    path('add-to-basket/',
+         views.add_to_basket, name='add-to-basket')
 ]

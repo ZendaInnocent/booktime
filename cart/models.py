@@ -39,5 +39,5 @@ class Order(models.Model):
         total = 0
         for order_item in self.order_items.all():
             total += order_item.get_total_item_price()
-        
+
         return total

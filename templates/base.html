@@ -32,6 +32,12 @@
 
   <div class="container my-3">
 
+    <div class="pb-3">
+      {% if request.basket %}
+        {{ request.basket.count }} items in basket
+      {% endif %}
+    </div>
+
     {% block content %}
 
     {% endblock content %}
