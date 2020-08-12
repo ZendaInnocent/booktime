@@ -34,7 +34,11 @@
 
     <div class="pb-3">
       {% if request.basket %}
-        {{ request.basket.count }} items in basket
+        {% if request.basket.count %}
+          {{ request.basket.count }} item(s) in basket
+        {% else %}
+          No item(s) in basket
+        {% endif %}
       {% endif %}
     </div>
 

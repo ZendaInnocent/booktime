@@ -83,5 +83,5 @@ class BasketLine(models.Model):
     basket = models.ForeignKey(
         Basket, on_delete=models.CASCADE, related_name='basketlines')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(
+    quantity = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(1), ])

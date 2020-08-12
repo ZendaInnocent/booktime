@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Basket</h2>
+
+    {% if formset %}
+        <p>You can adjust quantities below.</p>
+
+        <form method='POST'>
+            {% csrf_token %}
+            {{ formset.management_form }}
+
+            {% for form in formset %}
+                <p>
+                    {{ form.instance.product.name }}
+                    {{ form | crispy }}
+                </p>
+            {% endfor %}
+            <button class="btn btn-primary">Update Basket</button>
+        </form>
+    {% else %}
+        <p>You have no items in the basket.</p>
+    {% endif %}
+
+{% endblock content %}

@@ -1,5 +1,4 @@
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -7,6 +6,23 @@ from django.contrib import messages
 
 from . import forms
 from main.models import Product, ProductTag, Basket, BasketLine
+
+
+def manage_basket(request):
+    if not request.basket or request.basket.is_empty():
+        return render(request, 'main/basket.html', {'formset': None})
+    else:
+        formset = forms.BasketLineFormSet(instance=request.basket)
+
+    if request.method == 'POST':
+        formset = forms.BasketLineFormSet(
+            request.POST, instance=request.basket)
+        if formset.is_valid():
+            formset.save()
+
+        return redirect(reverse('main:manage-basket'))
+
+    return render(request, 'main/basket.html', {'formset': formset})
 
 
 def add_to_basket(request):

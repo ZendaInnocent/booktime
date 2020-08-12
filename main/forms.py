@@ -1,9 +1,20 @@
 import logging
 
 from django import forms
+from django.forms import inlineformset_factory
 from django.core.mail import send_mail
 
+from main.models import Basket, BasketLine
+
 logger = logging.getLogger(__name__)
+
+
+BasketLineFormSet = inlineformset_factory(
+    Basket,
+    BasketLine,
+    fields=('quantity', ),
+    extra=0,
+)
 
 
 class ContactForm(forms.Form):
