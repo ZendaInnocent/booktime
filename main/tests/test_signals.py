@@ -20,7 +20,7 @@ class TestMainAppSignals(TestCase):
                 image=ImageFile(f, name='tctb.png'),
             )
 
-            with self.assertLogs('main', level='INFO') as cm:
+            with self.assertLogs('main.signals', level='INFO') as cm:
                 image.save()
 
         self.assertGreaterEqual(len(cm.output), 1)

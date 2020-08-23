@@ -67,7 +67,7 @@ class TestMainAppViews(TestCase):
     def test_valid_form_in_contact_page_sends_mail(self):
         response = self.client.post(reverse('main:contact'), {
             'name': 'Test User',
-            'message': 'Hi there!',
+            'message': 'Hi there!, how are you doing?',
         })
 
         self.assertEqual(response.status_code, 302)

@@ -65,7 +65,7 @@ class TestProductModel(TestCase):
         basketline = BasketLine.objects.create(product=p1, basket=basket)
         basketline = BasketLine.objects.create(product=p2, basket=basket)
 
-        with self.assertLogs('main', level='INFO') as cm:
+        with self.assertLogs('main.models', level='INFO') as cm:
             order = basket.create_order(billing, shipping)
 
         self.assertGreaterEqual(len(cm.output), 1)

@@ -70,7 +70,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = (OrderLineInline, )
     fieldsets = (
         (None, {'fields': ('user', 'status', )}),
-        ('Billing Info',{
+        ('Billing Info', {
             'fields': (
                 'billing_name',
                 'billing_address1',

@@ -29,10 +29,17 @@ class ContactForm(forms.Form):
         )
     message = forms.CharField(widget=forms.Textarea(
         attrs={
-            'placeholder': "Your Message",
+            'placeholder': "Your Message (Not less than 4 words)",
             'rows': '4',
         }
     ))
+
+    def clean_message(self):
+        message = self.cleaned_data.get('message', '')
+        num_words = len(message.split())
+        if num_words < 4:
+            raise forms.ValidationError("Not enough words!")
+        return message
 
     def send_mail(self):
         logger.info('Sending email to Customer Service unit')

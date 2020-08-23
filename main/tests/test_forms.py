@@ -9,7 +9,7 @@ class TestMainAppForms(TestCase):
     def test_valid_contact_form_sends_mail(self):
         form = forms.ContactForm({
             'name': 'Test User',
-            'message': 'Hi there!'
+            'message': 'Hi there!, how are you doing?'
         })
 
         self.assertTrue(form.is_valid())

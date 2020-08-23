@@ -5,7 +5,7 @@
     <h2>Basket</h2>
 
     {% if formset %}
-        <p>You can adjust quantities below.</p>
+        <p class="lead">You can adjust quantities below.</p>
 
         <form method='POST'>
             {% csrf_token %}
@@ -32,7 +32,7 @@
             {% endif %}
         </form>
     {% else %}
-        <p>You have no items in the basket.</p>
+        <p class="lead">You have no items in the basket.</p>
     {% endif %}
 
 {% endblock content %}

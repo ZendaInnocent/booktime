@@ -3,6 +3,7 @@ from django.views import generic
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 
 from . import forms
 from main.models import Product, ProductTag, Basket, BasketLine
@@ -74,10 +75,12 @@ class AboutView(generic.TemplateView):
     template_name = 'main/about.html'
 
 
-class ContactView(generic.FormView):
+class ContactView(SuccessMessageMixin, generic.FormView):
     form_class = forms.ContactForm
     template_name = 'main/contact.html'
     success_url = '/'
+    success_message = ('Your message has sent successful. '
+                       'We will get to you shortly.')
 
     def form_valid(self, form):
         form.send_mail()
@@ -86,7 +89,7 @@ class ContactView(generic.FormView):
 
 class ProductListView(generic.ListView):
     template_name = 'main/product_list.html'
-    paginate_by = 2
+    paginate_by = 6
 
     def get_queryset(self):
         tag = self.kwargs['tag']
@@ -110,7 +113,7 @@ class ProductDetailView(generic.DetailView):
 
 class TagDetailView(generic.ListView):
     template_name = 'main/tag_detail.html'
-    paginate_by = 2
+    paginate_by = 6
 
     def get_queryset(self):
         tag = self.kwargs['tag']
