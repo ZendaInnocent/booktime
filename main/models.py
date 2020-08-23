@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.core.validators import MinValueValidator
 from django.contrib.auth import get_user_model
+from django.core import exceptions
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -83,9 +84,9 @@ class Basket(models.Model):
         return sum([i.quantity for i in self.basketlines.all()])
 
     def create_order(self, billing_address, shipping_address):
-        if not self.user:
-            raise exceptions.BasketException(
-                'Cannot create order without a user.')
+        # if not self.user:
+        #     raise exceptions.BasketException(
+        #         "Cannot create order without user")
 
         logger.info(
             "Creating order for basket_id=%d, "

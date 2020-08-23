@@ -1,5 +1,5 @@
 from django.urls import path
-# from django.views.generic import DetailView
+from django.views.generic import TemplateView
 
 from . import views
 from main.models import Product
@@ -19,4 +19,9 @@ urlpatterns = [
     path('add-to-basket/',
          views.add_to_basket, name='add-to-basket'),
     path('basket/', views.manage_basket, name='manage-basket'),
+    path('order/done/',
+         TemplateView.as_view(template_name='main/order_done.html'),
+         name='checkout-done'),
+    path('order/address-list', views.AddressSelectionView.as_view(),
+         name='address-select'),
 ]

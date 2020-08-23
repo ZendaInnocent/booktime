@@ -70,7 +70,7 @@ class AccountsAppViewsTest(TestCase):
         }
 
         self.client.force_login(user1)
-        response = self.client.post(reverse('accounts:address-create'),
+        response = self.client.post(reverse('accounts:address-add'),
                                     post_data)
 
         self.assertTrue(response.status_code, 200)

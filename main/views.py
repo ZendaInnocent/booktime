@@ -1,11 +1,32 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 from . import forms
 from main.models import Product, ProductTag, Basket, BasketLine
+
+
+class AddressSelectionView(generic.FormView):
+    form_class = forms.AddressSelectionForm
+    template_name = 'main/address_list.html'
+    success_url = reverse_lazy('main:checkout-done')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        del self.request.session['basket_id']
+        basket = self.request.basket
+        basket.user = self.request.user
+        basket.create_order(
+            form.cleaned_data['billing_address'],
+            form.cleaned_data['shipping_address']
+        )
+        return super().form_valid(form)
 
 
 def manage_basket(request):

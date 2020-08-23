@@ -18,6 +18,18 @@
                 </p>
             {% endfor %}
             <button class="btn btn-primary">Update Basket</button>
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'main:address-select' %}" class="btn btn-primary text-light">
+                Place Order
+            </a>
+            {% else %}
+            <a href="{% url 'accounts:login' %}?next={% url 'main:manage-basket' %}" class="btn btn-primary text-light">
+                Login
+            </a>
+            <a href="{% url 'accounts:signup' %}?next={% url 'main:manage-basket' %}" class="btn btn-primary text-light">
+                Signup
+            </a>
+            {% endif %}
         </form>
     {% else %}
         <p>You have no items in the basket.</p>

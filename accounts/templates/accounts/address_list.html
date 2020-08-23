@@ -6,7 +6,9 @@
 
 {% block content %}
     <h2>List of your addresses:</h2>
-    <a href="{% url 'accounts:address-create' %}" class="btn btn-primary">Add Address</a>
+    <a href="{% url 'accounts:address-add' %}" class="btn btn-primary">
+        Add Address
+    </a>
 
     <div class="row">
     {% for address in object_list %}

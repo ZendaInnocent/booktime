@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Select Address
+{% endblock title %}
+
+
+{% block content %}
+    <form method='POST'>
+        {% csrf_token %}
+        <h2>Place Your Order</h2>
+        {{ form | crispy }}
+        <button class="btn btn-primary">Submit</button>
+        <a href="{% url 'accounts:address-add' %}" class="btn btn-primary text-light">Add New One</a>
+    </form>
+{% endblock content %}

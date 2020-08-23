@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 
 from main.models import Basket, BasketLine
 from .widgets import PlusMinusNumberInput
+from accounts.models import Address
 
 logger = logging.getLogger(__name__)
 
@@ -46,3 +47,14 @@ class ContactForm(forms.Form):
             ['customerservices@domain.com'],
             fail_silently=False,
         )
+
+
+class AddressSelectionForm(forms.Form):
+    billing_address = forms.ModelChoiceField(queryset=None)
+    shipping_address = forms.ModelChoiceField(queryset=None)
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        queryset = Address.objects.filter(user=user)
+        self.fields['billing_address'].queryset = queryset
+        self.fields['shipping_address'].queryset = queryset
