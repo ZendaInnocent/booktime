@@ -14,3 +14,4 @@ Pillow
 werkzeug
 ipython
 pydotplus
+django-widget-tweaks

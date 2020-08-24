@@ -24,4 +24,7 @@ urlpatterns = [
          name='checkout-done'),
     path('order/address-list', views.AddressSelectionView.as_view(),
          name='address-select'),
+    path('order-dashboard/', views.OrderView.as_view(),
+         name='order-dashboard',
+    ),
 ]

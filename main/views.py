@@ -4,9 +4,15 @@ from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django import forms as django_forms
+from django.db import models as django_models
+
+import django_filters
+from django_filters.views import FilterView
 
 from . import forms
-from main.models import Product, ProductTag, Basket, BasketLine
+from main.models import Product, ProductTag, Basket, BasketLine, Order
 
 
 class AddressSelectionView(generic.FormView):
@@ -119,3 +125,33 @@ class TagDetailView(generic.ListView):
         tag = self.kwargs['tag']
         products = Product.objects.active().filter(tags__slug=tag)
         return products.order_by('name')
+
+
+class DateInput(django_forms.DateInput):
+    input_type = 'date'
+
+
+class OrderFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = Order
+
+        fields = {
+            'user__email': ['icontains'],
+            'status': ['exact'],
+            'date_updated': ['gt', 'lt'],
+            'date_added': ['gt', 'lt'],
+        }
+
+        filter_overrides = {
+            django_models.DateTimeField: {
+                'filter_class': django_filters.DateFilter,
+                'extra': lambda f: {
+                    'widget': DateInput}}}
+
+
+class OrderView(LoginRequiredMixin, UserPassesTestMixin, FilterView):
+    filterset_class = OrderFilter
+
+    def test_func(self):
+        return self.request.user.is_staff

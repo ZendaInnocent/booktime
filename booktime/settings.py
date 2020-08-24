@@ -35,6 +35,8 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    'django_tables2',
+    'debug_toolbar',
     'main.apps.MainConfig',
     'accounts.apps.AccountsConfig',
 
@@ -60,9 +62,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'main.middleware.BasketMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     # 'django_xss_fuzzer.ViewFuzzerMiddleware',
 ]
+
+INTERNAL_IPS = ['127.0.0.1']
+
+DJANGO_TABLES2_TEMPLATE = 'django_tables2/bootstrap.html'
 
 ROOT_URLCONF = 'booktime.urls'
 
