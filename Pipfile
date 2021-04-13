@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+channels = "*"
+django-crispy-forms = "*"
+django-filter = "*"
+djangorestframework = "*"
+django-extensions = "*"
+django-tables2 = "*"
+django-decouple = "*"
+pydotplus = "*"
+django-widget-tweaks = "*"
+Django = "*"
+Pillow = "*"
+
+[dev-packages]
+pytest-django = "*"
+pytest-cov = "*"
+factory-boy = "*"
+Werkzeug = "*"
+django-debug-toolbar = "*"
+ipython = "*"
+
+[requires]
+python_version = "3.8"
