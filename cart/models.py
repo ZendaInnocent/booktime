@@ -1,8 +1,8 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 
-from products.models import Product
 from accounts.models import Address
+from main.models import Product
 
 
 class Cart(models.Model):
@@ -21,14 +21,16 @@ class Cart(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    order_items  = models.ManyToManyField(Cart)
+    order_items = models.ManyToManyField(Cart)
     ordered = models.BooleanField(default=False)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField(blank=True, null=True)
     shipping_address = models.ForeignKey(
-        Address, related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
+        Address, related_name='shipping_address', on_delete=models.SET_NULL,
+        blank=True, null=True)
     billing_address = models.ForeignKey(
-        Address, related_name='billing_address', on_delete=models.SET_NULL, blank=True, null=True)
+        Address, related_name='billing_address', on_delete=models.SET_NULL,
+        blank=True, null=True)
     being_delivered = models.BooleanField(default=False)
     received = models.BooleanField(default=False)
 

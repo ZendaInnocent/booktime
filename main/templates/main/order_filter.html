@@ -3,18 +3,18 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    Order Dashboard - {{ block.super }}
+Order Dashboard - {{ block.super }}
 {% endblock title %}
 
 {% block content %}
-    <h2 class="pb-3">Order dashboard</h2>
-    <p>
-        {% render_table filter.qs %}
-    </p>
-    <hr>
-    <form method="get">
-        <h3>Search Order</h3>
-        {{ filter.form | crispy }}
-        <input type="submit" />
-    </form>
+<h2 class="pb-3">Order dashboard</h2>
+<p>
+  {% render_table filter.qs %}
+</p>
+<hr>
+<form method="get">
+  <h3>Search Order</h3>
+  {{ filter.form | crispy }}
+  <input type="submit" />
+</form>
 {% endblock content %}

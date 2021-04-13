@@ -1,14 +1,12 @@
 import datetime
 
-from django.shortcuts import render
 from django.contrib import messages
-from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from cart.models import Cart, Order
-from products.models import Product
-
+from main.models import Product
 
 # def cart_view(request):
 # 	user = request.user

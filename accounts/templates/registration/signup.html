@@ -3,17 +3,17 @@
 
 {% block content %}
 
-    <div class="container col-md-6 my-5">
-        <form method="POST">
-            {% csrf_token %}
-            {{ form | crispy }}
-            <button type="submit" class="btn btn-success">Sign Up</button>
-        </form>
-        <div class="mt-3">
-            <p>
-                Already have account? <a href="{% url 'accounts:login' %}">Login</a>
-            </p>
-        </div>
-    </div>
+<div class="container col-md-6 my-5">
+  <form method="POST">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-success">Sign Up</button>
+  </form>
+  <div class="mt-3">
+    <p>
+      Already have account? <a href="{% url 'accounts:login' %}">Login</a>
+    </p>
+  </div>
+</div>
 
 {% endblock content %}

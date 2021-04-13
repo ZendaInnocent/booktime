@@ -5,56 +5,59 @@
 {% endblock title %}
 
 {% block content %}
-    <nav class="breadcrumb">
-        <a class="breadcrumb-item" href="{% url 'main:product-list' tag='all' %}">Products</a>
-        <span class="breadcrumb-item active">{{ object.name|capfirst }}</span>
-    </nav>
+  <nav class="breadcrumb">
+    <a class="breadcrumb-item" href="{% url 'main:product-list' tag='all' %}">
+      Products
+    </a>
+    <span class="breadcrumb-item active">{{ object.name|capfirst }}</span>
+  </nav>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th scope="row">Name</th>
-                <td>{{ object.name | capfirst }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Cover Images</th>
-                <td>
-                    {% for image in object.productimages.all %}
-                        <img src="{{ image.thumbnail.url }}" alt="Cover">
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Price</th>
-                <td>{{ object.price | intcomma }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Description</th>
-                <td>{{ object.description | linebreaks }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Tags</th>
-                <td>
-                    {% for tag in object.tags.all %}
-                        <a href="{% url 'main:tag-detail' tag.slug %}" class="btn btn-secondary">{{ tag }}</a>
-                    {% empty %}
-                        No tags available
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">In Stock</th>
-                <td>{{ object.in_stock | yesno | capfirst }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Updated On</th>
-                <td>{{ object.date_updated | date:"F Y" }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <hr>
-    <div class="d-flex">
-        <a href="{% url 'main:product-list' tag='all' %}" class="btn btn-primary mt-3">View More Products</a>
-        <a href="{% url 'main:add-to-basket' %}?product_id={{ object.id }}" class="btn btn-success mt-3 ml-5">Add to Basket</a>
-    </div>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">Name</th>
+        <td>{{ object.name | capfirst }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Cover Images</th>
+        <td>
+          {% for image in object.productimages.all %}
+          <img src="{{ image.thumbnail.url }}" alt="Cover">
+          {% endfor %}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Price</th>
+        <td>{{ object.price | intcomma }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Description</th>
+        <td>{{ object.description | linebreaks }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Tags</th>
+        <td>
+          {% for tag in object.tags.all %}
+          <a href="{% url 'main:tag-detail' tag.slug %}" class="btn btn-secondary">{{ tag }}</a>
+          {% empty %}
+          No tags available
+          {% endfor %}
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">In Stock</th>
+        <td>{{ object.in_stock | yesno | capfirst }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Updated On</th>
+        <td>{{ object.date_updated | date:"F Y" }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <div class="d-flex">
+    <a href="{% url 'main:product-list' tag='all' %}" class="btn btn-primary mt-3">View More Products</a>
+    <a href="{% url 'main:add-to-basket' %}?product_id={{ object.id }}" class="btn btn-success mt-3 ml-5">Add to
+      Basket</a>
+  </div>
 {% endblock content %}
