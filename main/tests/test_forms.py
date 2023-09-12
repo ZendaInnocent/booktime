@@ -1,30 +1,31 @@
-from django.test import TestCase
+import logging
+
 from django.core import mail
 
 from main import forms
 
 
-class TestMainAppForms(TestCase):
+def test_valid_contact_form_sends_mail(caplog) -> None:
+    form = forms.ContactForm(
+        {'name': 'Test User', 'message': 'Hi there!, how are you doing?'}
+    )
 
-    def test_valid_contact_form_sends_mail(self):
-        form = forms.ContactForm({
-            'name': 'Test User',
-            'message': 'Hi there!, how are you doing?'
-        })
+    assert form.is_valid()
 
-        self.assertTrue(form.is_valid())
+    with caplog.at_level(logging.INFO, logger='main.forms'):
+        form.send_mail()
 
-        with self.assertLogs('main.forms', level='INFO') as cm:
-            form.send_mail()
+    assert len(mail.outbox) == 1
+    assert mail.outbox[0].subject == 'Mail from the site'
 
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, 'Mail from the site')
+    assert len(caplog.records) >= 1
 
-        self.assertGreaterEqual(len(cm.output), 1)
 
-    def test_invalid_contact_form(self):
-        form = forms.ContactForm({
+def test_invalid_contact_form() -> None:
+    form = forms.ContactForm(
+        {
             'name': 'TEst User',
-        })
+        }
+    )
 
-        self.assertFalse(form.is_valid())
+    assert not form.is_valid()

@@ -14,12 +14,12 @@ logger = logging.getLogger(__name__)
 
 
 @receiver(pre_save, sender=ProductImage)
-def generate_thumbnail(sender, instance, **kwargs):
+def generate_thumbnail(sender, instance, **kwargs) -> None:
     logger.info(f'Generating thumbnail for product {instance.product.id}')
 
     image = Image.open(instance.image)
     image = image.convert("RGB")
-    image.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
+    image.thumbnail(THUMBNAIL_SIZE, Image.BICUBIC)
 
     temp_thumb = BytesIO()
     image.save(temp_thumb, 'JPEG')

@@ -1,12 +1,13 @@
 import logging
 
 from django import forms
-from django.forms import inlineformset_factory
 from django.core.mail import send_mail
+from django.forms import inlineformset_factory
 
-from main.models import Basket, BasketLine
-from .widgets import PlusMinusNumberInput
 from accounts.models import Address
+from main.models import Basket, BasketLine
+
+from .widgets import PlusMinusNumberInput
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 BasketLineFormSet = inlineformset_factory(
     Basket,
     BasketLine,
-    fields=('quantity', ),
+    fields=('quantity',),
     extra=0,
     widgets={'quantity': PlusMinusNumberInput()},
 )
@@ -23,16 +24,20 @@ BasketLineFormSet = inlineformset_factory(
 class ContactForm(forms.Form):
     name = forms.CharField(
         max_length=100,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Your Name',
-            })
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Your Name',
+            }
+        ),
+    )
+    message = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'placeholder': "Your Message (Not less than 4 words)",
+                'rows': '4',
+            }
         )
-    message = forms.CharField(widget=forms.Textarea(
-        attrs={
-            'placeholder': "Your Message (Not less than 4 words)",
-            'rows': '4',
-        }
-    ))
+    )
 
     def clean_message(self):
         message = self.cleaned_data.get('message', '')

@@ -1,5 +1,6 @@
 import django_filters
 from django import forms as django_forms
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import models as django_models
@@ -67,6 +68,7 @@ def add_to_basket(request):
     if not created:
         basketline.quantity += 1
         basketline.save()
+        messages.success(request, 'Item added to Basket successful.')
 
     return HttpResponseRedirect(reverse('main:product-detail', args=(product.slug,)))
 

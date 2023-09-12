@@ -1,22 +1,22 @@
-from collections import Counter
 import csv
 import os.path
+from collections import Counter
 
-from django.core.management.base import BaseCommand
 from django.core.files.images import ImageFile
+from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
-from main.models import Product, ProductTag, ProductImage
+from main.models import Product, ProductImage, ProductTag
 
 
 class Command(BaseCommand):
     help = 'Importing Products in BookTime.'
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser) -> None:
         parser.add_argument('csvfile', type=open)
         parser.add_argument('image_basedir', type=str)
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options) -> None:
         self.stdout.write("Importing Products...")
 
         c = Counter()
@@ -30,9 +30,7 @@ class Command(BaseCommand):
             product.slug = slugify(row['name'])
 
             for import_tag in row['tags'].split('|'):
-                tag, tag_created = ProductTag.objects.get_or_create(
-                    name=import_tag
-                )
+                tag, tag_created = ProductTag.objects.get_or_create(name=import_tag)
                 tag.slug = slugify(import_tag)
                 tag.save()
                 product.tags.add(tag)
@@ -41,12 +39,13 @@ class Command(BaseCommand):
                 if tag_created:
                     c['tags_created'] += 1
 
-            with open(os.path.join(options['image_basedir'],
-                      row['image_filename']), 'rb') as f:
+            with open(
+                os.path.join(options['image_basedir'], row['image_filename']), 'rb'
+            ) as f:
                 image = ProductImage(
                     product=product,
                     image=ImageFile(f, name=row['image_filename']),
-                    )
+                )
                 image.save()
                 c['images'] += 1
 
@@ -60,12 +59,7 @@ class Command(BaseCommand):
             % (c['products'], c['products_created'])
         )
         self.stdout.write(
-            "Tags processed=%d (created=%d)"
-            % (c['tags'], c['tags_created'])
+            "Tags processed=%d (created=%d)" % (c['tags'], c['tags_created'])
         )
-        self.stdout.write(
-            "Images processed=%d" % (c['images'])
-        )
-        self.stdout.write(
-            "Process complete..."
-        )
+        self.stdout.write("Images processed=%d" % (c['images']))
+        self.stdout.write("Process complete...")
