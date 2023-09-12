@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 class ProductManager(models.Manager):
-
     def active(self):
         return self.filter(active=True)
 
@@ -22,28 +21,30 @@ class Product(models.Model):
     active = models.BooleanField(default=True)
     in_stock = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
-    tags = models.ManyToManyField('ProductTag', related_name='producttags',
-                                  blank=True)
+    tags = models.ManyToManyField('ProductTag', related_name='producttags', blank=True)
 
     objects = ProductManager()
 
     class Meta:
-        ordering = ['name', ]
+        ordering = [
+            'name',
+        ]
 
     def __str__(self):
         return self.name
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, related_name='productimages',
-                                on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, related_name='productimages', on_delete=models.CASCADE
+    )
     image = models.ImageField(upload_to='product-images/')
-    thumbnail = models.ImageField(upload_to='product-thumbnails/',
-                                  null=True, blank=True)
+    thumbnail = models.ImageField(
+        upload_to='product-thumbnails/', null=True, blank=True
+    )
 
 
 class ProductTagManager(models.Manager):
-
     def get_by_natural_key(self, slug):
         return self.get(slug=slug)
 
@@ -60,7 +61,7 @@ class ProductTag(models.Model):
         return self.name
 
     def natural_key(self):
-        return (self.slug, )
+        return (self.slug,)
 
 
 class Basket(models.Model):
@@ -71,8 +72,7 @@ class Basket(models.Model):
         (SUBMITTED, 'Submitted'),
     )
 
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     status = models.IntegerField(choices=STATUSES, default=OPEN)
 
     def is_empty(self):
@@ -82,7 +82,6 @@ class Basket(models.Model):
         return sum([i.quantity for i in self.basketlines.all()])
 
     def create_order(self, billing_address, shipping_address):
-
         logger.info(
             "Creating order for basket_id=%d, "
             "shipping_address_id=%d, billing_address_id=%d",
@@ -116,9 +115,7 @@ class Basket(models.Model):
                     "order": order,
                     "product": line.product,
                 }
-                order_line = OrderLine.objects.create(
-                    **order_line_data
-                )
+                OrderLine.objects.create(**order_line_data)
             c += 1
 
         logger.info(
@@ -134,10 +131,15 @@ class Basket(models.Model):
 
 class BasketLine(models.Model):
     basket = models.ForeignKey(
-        Basket, on_delete=models.CASCADE, related_name='basketlines')
+        Basket, on_delete=models.CASCADE, related_name='basketlines'
+    )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(
-        default=1, validators=[MinValueValidator(1), ])
+        default=1,
+        validators=[
+            MinValueValidator(1),
+        ],
+    )
 
 
 class Order(models.Model):
@@ -183,6 +185,7 @@ class OrderLine(models.Model):
     )
 
     order = models.ForeignKey(
-        Order, on_delete=models.CASCADE, related_name='orderlines')
+        Order, on_delete=models.CASCADE, related_name='orderlines'
+    )
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     status = models.IntegerField(choices=CHOICES, default=NEW)

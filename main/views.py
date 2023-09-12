@@ -1,18 +1,17 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views import generic
-from django.urls import reverse, reverse_lazy
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from django import forms as django_forms
-from django.db import models as django_models
-
 import django_filters
+from django import forms as django_forms
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.db import models as django_models
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views import generic
 from django_filters.views import FilterView
 
+from main.models import Basket, BasketLine, Order, Product, ProductTag
+
 from . import forms
-from main.models import Product, ProductTag, Basket, BasketLine, Order
 
 
 class AddressSelectionView(generic.FormView):
@@ -31,7 +30,7 @@ class AddressSelectionView(generic.FormView):
         basket.user = self.request.user
         basket.create_order(
             form.cleaned_data['billing_address'],
-            form.cleaned_data['shipping_address']
+            form.cleaned_data['shipping_address'],
         )
         return super().form_valid(form)
 
@@ -43,8 +42,7 @@ def manage_basket(request):
         formset = forms.BasketLineFormSet(instance=request.basket)
 
     if request.method == 'POST':
-        formset = forms.BasketLineFormSet(
-            request.POST, instance=request.basket)
+        formset = forms.BasketLineFormSet(request.POST, instance=request.basket)
         if formset.is_valid():
             formset.save()
 
@@ -63,14 +61,14 @@ def add_to_basket(request):
         request.session['basket_id'] = basket.id
 
     basketline, created = BasketLine.objects.get_or_create(
-        basket=basket, product=product)
+        basket=basket, product=product
+    )
 
     if not created:
         basketline.quantity += 1
         basketline.save()
 
-    return HttpResponseRedirect(
-        reverse('main:product-detail', args=(product.slug, )))
+    return HttpResponseRedirect(reverse('main:product-detail', args=(product.slug,)))
 
 
 class HomeView(generic.TemplateView):
@@ -85,8 +83,7 @@ class ContactView(SuccessMessageMixin, generic.FormView):
     form_class = forms.ContactForm
     template_name = 'main/contact.html'
     success_url = '/'
-    success_message = ('Your message has sent successful. '
-                       'We will get to you shortly.')
+    success_message = 'Your message has sent successful. ' 'We will get to you shortly.'
 
     def form_valid(self, form):
         form.send_mail()
@@ -132,7 +129,6 @@ class DateInput(django_forms.DateInput):
 
 
 class OrderFilter(django_filters.FilterSet):
-
     class Meta:
         model = Order
 
@@ -146,8 +142,9 @@ class OrderFilter(django_filters.FilterSet):
         filter_overrides = {
             django_models.DateTimeField: {
                 'filter_class': django_filters.DateFilter,
-                'extra': lambda f: {
-                    'widget': DateInput}}}
+                'extra': lambda f: {'widget': DateInput},
+            }
+        }
 
 
 class OrderView(LoginRequiredMixin, UserPassesTestMixin, FilterView):

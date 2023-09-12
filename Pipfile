@@ -15,6 +15,7 @@ pydotplus = "*"
 django-widget-tweaks = "*"
 Django = "*"
 Pillow = "*"
+crispy-bootstrap4 = "*"
 
 [dev-packages]
 pytest-django = "*"

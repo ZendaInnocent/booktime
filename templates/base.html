@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -35,9 +36,9 @@
     <div class="pb-3">
       {% if request.basket %}
         {% if request.basket.count %}
-          {{ request.basket.count }} item(s) in basket
+        {{ request.basket.count }} item{{ request.basket.count|pluralize }} in basket
         {% else %}
-          No item(s) in basket
+        No item in basket
         {% endif %}
       {% endif %}
     </div>
