@@ -3,6 +3,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -20,28 +21,18 @@
   {% include 'base_nav.html' %}
 
   {% if messages %}
-    {% for message in messages %}
-    <div class="container alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        <span class="sr-only">Close</span>
-      </button>
-      {{ message }}
-    </div>
-    {% endfor %}
+  {% for message in messages %}
+  <div class="container alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    {{ message }}
+  </div>
+  {% endfor %}
   {% endif %}
 
   <div class="container my-3">
-
-    <div class="pb-3">
-      {% if request.basket %}
-        {% if request.basket.count %}
-        {{ request.basket.count }} item{{ request.basket.count|pluralize }} in basket
-        {% else %}
-        No item in basket
-        {% endif %}
-      {% endif %}
-    </div>
 
     {% block content %}
 
@@ -58,4 +49,5 @@
   {% endblock js %}
 
 </body>
+
 </html>

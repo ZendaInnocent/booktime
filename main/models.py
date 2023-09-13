@@ -30,7 +30,7 @@ class Product(models.Model):
             'name',
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -45,7 +45,7 @@ class ProductImage(models.Model):
 
 
 class ProductTagManager(models.Manager):
-    def get_by_natural_key(self, slug):
+    def get_by_natural_key(self, slug) -> str:
         return self.get(slug=slug)
 
 
@@ -57,10 +57,10 @@ class ProductTag(models.Model):
 
     objects = ProductTagManager()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def natural_key(self):
+    def natural_key(self) -> tuple[str]:
         return (self.slug,)
 
 
@@ -72,16 +72,17 @@ class Basket(models.Model):
         (SUBMITTED, 'Submitted'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     status = models.IntegerField(choices=STATUSES, default=OPEN)
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         return self.basketlines.count() == 0
 
-    def count(self):
+    @property
+    def count(self) -> int:
         return sum([i.quantity for i in self.basketlines.all()])
 
-    def create_order(self, billing_address, shipping_address):
+    def create_order(self, billing_address, shipping_address) -> 'Order':
         logger.info(
             "Creating order for basket_id=%d, "
             "shipping_address_id=%d, billing_address_id=%d",

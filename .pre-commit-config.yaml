@@ -31,8 +31,3 @@ repos:
     args:
       - -s
       - B101
-
-- repo: https://github.com/getcodelimit/codelimit
-  rev: v0.3.0
-  hooks:
-    - id: codelimit

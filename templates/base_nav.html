@@ -44,7 +44,14 @@
                     active
                 {% endif %}
                 ">
-                    <a class="nav-link" href="{% url 'main:manage-basket' %}">Basket</a>
+                    <a class="nav-link" href="{% url 'main:manage-basket' %}">
+                        Basket <span class="badge badge-primary">
+                            {% if request.basket %}
+                            {{ request.basket.count }}
+                            {% else %}
+                            0
+                            {% endif %}</span>
+                    </a>
                 </li>
 
                 {% if request.user.is_authenticated %}

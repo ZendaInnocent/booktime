@@ -1,6 +1,7 @@
 import django_filters
 from django import forms as django_forms
 from django.contrib import messages
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import models as django_models
@@ -66,12 +67,15 @@ def add_to_basket(request):
     basket = request.basket
 
     if not request.basket:
-        user = request.user if request.user.is_authenticated else None
-        basket = Basket.objects.create(user=user)
+        user: AbstractBaseUser | None = (
+            request.user if request.user.is_authenticated else None
+        )
+        basket: Basket = Basket.objects.create(user=user)
         request.session['basket_id'] = basket.id
 
     basketline, created = BasketLine.objects.get_or_create(
-        basket=basket, product=product
+        basket=basket,
+        product=product,
     )
 
     if not created:
@@ -79,14 +83,19 @@ def add_to_basket(request):
         basketline.save()
         messages.success(request, 'Item added to Basket successful.')
 
-    return HttpResponseRedirect(reverse('main:product-detail', args=(product.slug,)))
+    return HttpResponseRedirect(
+        reverse(
+            'main:product-detail',
+            args=(product.slug,),
+        )
+    )
 
 
 class ContactView(SuccessMessageMixin, generic.FormView):
     form_class = forms.ContactForm
     template_name = 'main/contact.html'
     success_url = '/'
-    success_message = 'Your message has sent successful. ' 'We will get to you shortly.'
+    success_message = 'Your message has sent successful. We will get to you shortly.'
 
     def form_valid(self, form):
         form.send_mail()
@@ -115,6 +124,7 @@ class ProductListView(generic.ListView):
 class ProductDetailView(generic.DetailView):
     model = Product
     template_name = 'main/product_detail.html'
+    context_object_name = 'product'
 
 
 class TagDetailView(generic.ListView):
