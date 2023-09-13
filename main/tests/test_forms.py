@@ -1,5 +1,7 @@
 import logging
 
+import pytest
+from django import forms as django_forms
 from django.core import mail
 
 from main import forms
@@ -29,3 +31,12 @@ def test_invalid_contact_form() -> None:
     )
 
     assert not form.is_valid()
+
+
+def test_contact_form_message_validation() -> None:
+    form = forms.ContactForm({'name': 'Test User', 'message': 'Hi'})
+
+    assert not form.is_valid()
+
+    with pytest.raises(django_forms.ValidationError):
+        form.clean_message()

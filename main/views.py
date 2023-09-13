@@ -4,8 +4,9 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import models as django_models
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.response import TemplateResponse
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django_filters.views import FilterView
@@ -13,6 +14,14 @@ from django_filters.views import FilterView
 from main.models import Basket, BasketLine, Order, Product, ProductTag
 
 from . import forms
+
+
+def home_view(request: HttpRequest) -> TemplateResponse:
+    return TemplateResponse(request, 'main/home.html', {})
+
+
+def about_view(request: HttpRequest) -> TemplateResponse:
+    return TemplateResponse(request, 'main/about.html', {})
 
 
 class AddressSelectionView(generic.FormView):
@@ -71,14 +80,6 @@ def add_to_basket(request):
         messages.success(request, 'Item added to Basket successful.')
 
     return HttpResponseRedirect(reverse('main:product-detail', args=(product.slug,)))
-
-
-class HomeView(generic.TemplateView):
-    template_name = 'main/home.html'
-
-
-class AboutView(generic.TemplateView):
-    template_name = 'main/about.html'
 
 
 class ContactView(SuccessMessageMixin, generic.FormView):

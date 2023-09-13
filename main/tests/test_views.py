@@ -12,35 +12,6 @@ from main.models import Basket, BasketLine, Product
 User: type[AbstractBaseUser] = get_user_model()
 
 
-def test_add_to_basket_loggedin_works(client) -> None:
-    user1 = User.objects.create_user(
-        name='sample name',
-        email='sample@mail.com',
-        password='adfsaidf',
-    )
-
-    cb = Product.objects.create(
-        name="The cathedral and the bazaar",
-        slug="cathedral-bazaar",
-        price=Decimal("10.00"),
-    )
-    w = Product.objects.create(
-        name="Microsoft Windows guide",
-        slug="microsoft-windows-guide",
-        price=Decimal("12.00"),
-    )
-
-    client.force_login(user1)
-    client.get(reverse("main:add-to-basket"), {"product_id": cb.id})
-
-    assert Basket.objects.filter(user=user1).exists()
-    assert BasketLine.objects.filter(basket__user=user1).count() == 1
-
-    client.get(reverse("main:add-to-basket"), {"product_id": w.id})
-
-    assert BasketLine.objects.filter(basket__user=user1).count() == 2
-
-
 def test_home_page_works(client) -> None:
     response: HttpResponse = client.get(reverse('main:home'))
 
@@ -125,3 +96,32 @@ def test_product_list_page_filter_by_tags_and_active(client) -> None:
         Product.objects.active().filter(tags__slug='opensource').order_by('name')
     )
     assert list(response.context['object_list']) == list(product_list)
+
+
+def test_add_to_basket_loggedin_works(client) -> None:
+    user1 = User.objects.create_user(
+        name='sample name',
+        email='sample@mail.com',
+        password='adfsaidf',
+    )
+
+    cb = Product.objects.create(
+        name="The cathedral and the bazaar",
+        slug="cathedral-bazaar",
+        price=Decimal("10.00"),
+    )
+    w = Product.objects.create(
+        name="Microsoft Windows guide",
+        slug="microsoft-windows-guide",
+        price=Decimal("12.00"),
+    )
+
+    client.force_login(user1)
+    client.get(reverse("main:add-to-basket"), {"product_id": cb.id})
+
+    assert Basket.objects.filter(user=user1).exists()
+    assert BasketLine.objects.filter(basket__user=user1).count() == 1
+
+    client.get(reverse("main:add-to-basket"), {"product_id": w.id})
+
+    assert BasketLine.objects.filter(basket__user=user1).count() == 2
