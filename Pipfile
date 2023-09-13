@@ -16,6 +16,7 @@ django-widget-tweaks = "*"
 Django = "*"
 Pillow = "*"
 crispy-bootstrap4 = "*"
+pre-commit = "*"
 
 [dev-packages]
 pytest-django = "*"
