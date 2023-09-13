@@ -2,43 +2,72 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h2>Basket</h2>
+<h2>Basket</h2>
 
-  {% if formset %}
-  <p class="lead">You can adjust quantities below.</p>
+{% if formset %}
+<p class="lead">You can adjust quantities below.</p>
 
-  <form method='POST'>
-      {% csrf_token %}
-      {{ formset.management_form }}
+<form method='POST'>
+  {% csrf_token %}
+  {{ formset.management_form }}
 
-      {% for form in formset %}
-      <p>
-          {{ form.instance.product.name }}
-          {{ form | crispy }}
-      </p>
-      {% endfor %}
-      <button class="btn btn-primary">Update Basket</button>
-      {% if request.user.is_authenticated %}
-      <a href="{% url 'main:address-select' %}" class="btn btn-primary text-light">
-          Place Order
-      </a>
-      {% else %}
-      <a href="{% url 'accounts:login' %}?next={% url 'main:manage-basket' %}" class="btn btn-primary text-light">
-          Login
-      </a>
-      <a href="{% url 'accounts:signup' %}?next={% url 'main:manage-basket' %}" class="btn btn-primary text-light">
-          Signup
-      </a>
-      {% endif %}
-  </form>
+
+  <!-- TODO: show all items inline -->
+  <div class="table-responsive">
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in formset %}
+        {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+        {% endfor %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ form.instance.product.name }}</td>
+          {% for field in form.visible_fields %}
+          <td>{{ field }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <button class="btn btn-primary">Update Basket</button>
+
+  {% if request.user.is_authenticated %}
+  <a href="{% url 'main:address-select' %}" class="btn btn-primary text-light">
+    Place Order
+  </a>
   {% else %}
-    <p class="lead">You have no items in the basket.</p>
+  <a href="{% url 'accounts:login' %}?next={% url 'main:manage-basket' %}" class="btn btn-primary text-light">
+    Login
+  </a>
+  <a href="{% url 'accounts:signup' %}?next={% url 'main:manage-basket' %}" class="btn btn-primary text-light">
+    Signup
+  </a>
   {% endif %}
+</form>
+{% else %}
+<p class="lead">
+  You have no items in the basket. View products to
+  <a href="{% url 'main:product-list' 'all' %}">
+    add
+  </a>.
+</p>
+{% endif %}
 
 {% endblock content %}
 
 {% block js %}
-  {% if formset %}
-    {{ formset.media }}
-  {% endif %}
+{% if formset %}
+{{ formset.media }}
+{% endif %}
 {% endblock js %}

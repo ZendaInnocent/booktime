@@ -48,7 +48,7 @@ class AddressSelectionView(generic.FormView):
 
 def manage_basket(request):
     if not request.basket or request.basket.is_empty():
-        return render(request, 'main/basket.html', {'formset': None})
+        formset = None
     else:
         formset = forms.BasketLineFormSet(instance=request.basket)
 
@@ -56,6 +56,7 @@ def manage_basket(request):
         formset = forms.BasketLineFormSet(request.POST, instance=request.basket)
         if formset.is_valid():
             formset.save()
+            messages.success(request, 'Basket updated succesful.')
 
         return redirect(reverse('main:manage-basket'))
 
@@ -81,7 +82,8 @@ def add_to_basket(request):
     if not created:
         basketline.quantity += 1
         basketline.save()
-        messages.success(request, 'Item added to Basket successful.')
+
+    messages.success(request, 'Item added to Basket successful.')
 
     return HttpResponseRedirect(
         reverse(
