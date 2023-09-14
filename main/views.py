@@ -107,20 +107,19 @@ class ContactView(SuccessMessageMixin, generic.FormView):
 class ProductListView(generic.ListView):
     template_name = 'main/product_list.html'
     paginate_by = 6
+    context_object_name = 'products'
 
     def get_queryset(self):
-        tag = self.kwargs['tag']
-        self.tag = None
+        tag = self.kwargs.get('tag', None)
 
-        if tag != 'all':
-            self.tag = get_object_or_404(ProductTag, slug=tag)
+        if tag is None:
+            return Product.objects.active().order_by('name')
 
-        if self.tag:
-            products = Product.objects.active().filter(tags=self.tag)
+        if tag == 'all':
+            return Product.objects.active()
         else:
-            products = Product.objects.active()
-
-        return products.order_by('name')
+            tag: ProductTag = get_object_or_404(ProductTag, slug=tag)
+            return Product.objects.active().filter(tags=tag)
 
 
 class ProductDetailView(generic.DetailView):
@@ -130,8 +129,9 @@ class ProductDetailView(generic.DetailView):
 
 
 class TagDetailView(generic.ListView):
-    template_name = 'main/tag_detail.html'
+    template_name = 'main/product_list.html'
     paginate_by = 6
+    context_object_name = 'products'
 
     def get_queryset(self):
         tag = self.kwargs['tag']

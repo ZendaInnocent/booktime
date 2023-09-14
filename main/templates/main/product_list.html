@@ -6,7 +6,7 @@
 {% block content %}
 <h2 class="mb-3">Products</h2>
 
-{% for product in object_list %}
+{% for product in products %}
 <p>{{ product.name }}</p>
 <p>
   <a href="{% url 'main:product-detail' product.slug %}">See it here</a>
