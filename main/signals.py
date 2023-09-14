@@ -56,6 +56,7 @@ def merge_baskets_if_found(sender, request, user, **kwargs):
 
             anonymous_basket.delete()
             request.basket = logged_in_basket
+            request.session.update({'basket_id': logged_in_basket.id})
             logger.info(f'Merge basket to {logged_in_basket.id}')
         except Basket.DoesNotExist:
             anonymous_basket.user = user
