@@ -1,9 +1,13 @@
 import logging
 from decimal import Decimal
 
+from django.contrib import auth
+from django.contrib.auth import get_user_model
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.core.files.images import ImageFile
+from django.urls import reverse
 
-from main.models import Product, ProductImage
+from main.models import Basket, BasketLine, Product, ProductImage
 
 
 def test_thumbnails_are_generated_on_save(caplog) -> None:
@@ -32,3 +36,33 @@ def test_thumbnails_are_generated_on_save(caplog) -> None:
     # delete generated files
     image.thumbnail.delete(save=False)
     image.image.delete(save=False)
+
+
+def test_basket_merge_when_login(client) -> None:
+    user1: AbstractBaseUser = get_user_model().objects.create(
+        email='ome22@test.com',
+    )
+    cb: Product = Product.objects.create(
+        name="The cathedral and the bazaar",
+        slug="cathedral-bazaar",
+        price=Decimal("10.00"),
+    )
+    w: Product = Product.objects.create(
+        name="Microsoft Windows guide",
+        slug="microsoft-windows-guide",
+        price=Decimal("12.00"),
+    )
+    basket: Basket = Basket.objects.create(user=user1)
+    BasketLine.objects.create(basket=basket, product=cb, quantity=2)
+
+    client.get(
+        reverse('main:add-to-basket'),
+        {'product_id': w.id},
+    )
+
+    client.force_login(user1)
+
+    assert auth.get_user(client).is_authenticated
+    assert Basket.objects.filter(user=user1).exists()
+    basket = Basket.objects.get(user=user1)
+    assert basket.count == 3

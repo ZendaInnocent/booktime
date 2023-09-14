@@ -3,6 +3,7 @@ import logging
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.urls import reverse_lazy
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -128,6 +129,9 @@ class Basket(models.Model):
         self.status = Basket.SUBMITTED
         self.save()
         return order
+
+    def get_absolute_url(self) -> str:
+        return reverse_lazy('main:product-detail', kwargs={'slug': self.slug})
 
 
 class BasketLine(models.Model):

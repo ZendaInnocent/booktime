@@ -71,7 +71,7 @@ def add_to_basket(request):
         user: AbstractBaseUser | None = (
             request.user if request.user.is_authenticated else None
         )
-        basket: Basket = Basket.objects.create(user=user)
+        basket, create = Basket.objects.get_or_create(user=user)
         request.session['basket_id'] = basket.id
 
     basketline, created = BasketLine.objects.get_or_create(

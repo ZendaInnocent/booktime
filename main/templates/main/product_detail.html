@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load humanize %}
 
-{% block title %}Product Detail
+{% block title %}
+{{ product.name }} | Product Detail | {{ block.super }}
 {% endblock title %}
 
 {% block content %}
@@ -57,11 +58,12 @@
   </tbody>
 </table>
 <hr>
+
 <div class="d-flex mt-3">
   <a href="{% url 'main:product-list' tag='all' %}" class="btn btn-primary">
     View More Products
   </a>
-  <a href="{% url 'main:add-to-basket' %}?product_id={{ product.id }}" class="btn btn-success">
+  <a href="{% url 'main:add-to-basket' %}?product_id={{ product.id }}" class="btn btn-success ml-2">
     Add to Basket
   </a>
 </div>
