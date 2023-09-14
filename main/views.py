@@ -47,6 +47,11 @@ class AddressSelectionView(generic.FormView):
 
 
 def manage_basket(request):
+    if request.user.is_authenticated:
+        basket: Basket = Basket.objects.get(user=request.user)
+        if basket:
+            request.basket = basket
+
     if not request.basket or request.basket.is_empty():
         formset = None
     else:
@@ -65,17 +70,18 @@ def manage_basket(request):
 
 def add_to_basket(request):
     product = get_object_or_404(Product, pk=request.GET.get('product_id'))
-    basket = request.basket
+    basket: Basket = request.basket
 
-    if not request.basket:
+    if request.basket is None:
         user: AbstractBaseUser | None = (
             request.user if request.user.is_authenticated else None
         )
-        basket, create = Basket.objects.get_or_create(user=user)
+        basket, created = Basket.objects.get_or_create(user=user)
         request.session['basket_id'] = basket.id
+        request.basket = basket
 
     basketline, created = BasketLine.objects.get_or_create(
-        basket=basket,
+        basket=request.basket,
         product=product,
     )
 

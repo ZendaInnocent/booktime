@@ -76,6 +76,9 @@ class Basket(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     status = models.IntegerField(choices=STATUSES, default=OPEN)
 
+    def __str__(self) -> str:
+        return f"{self.user.email}'s Basket"
+
     def is_empty(self) -> bool:
         return self.basketlines.count() == 0
 
@@ -145,6 +148,9 @@ class BasketLine(models.Model):
             MinValueValidator(1),
         ],
     )
+
+    def __str__(self):
+        return f'{self.basket} - {self.product} - {self.quantity}'
 
 
 class Order(models.Model):

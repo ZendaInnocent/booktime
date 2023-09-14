@@ -45,12 +45,12 @@
                 {% endif %}
                 ">
                     <a class="nav-link" href="{% url 'main:manage-basket' %}">
-                        Basket <span class="badge badge-primary">
-                            {% if request.basket %}
+                        Basket
+                        {% if request.basket %}
+                        <span class="badge badge-primary">
                             {{ request.basket.count }}
-                            {% else %}
-                            0
-                            {% endif %}</span>
+                        </span>
+                        {% endif %}
                     </a>
                 </li>
 
